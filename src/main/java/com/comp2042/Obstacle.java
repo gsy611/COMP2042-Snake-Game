@@ -17,21 +17,55 @@ public class Obstacle {
        this.y = y;
     }
 
-    public void newObstacles(Snake snek, Coin coin, int amount) {
-        if (obstacles.size() > 50) {
-            return;
-        }
-        Random rnd = new Random();
-        Point p;
-        for (int i=0; i<amount; i++) {
-            do {
-                p = new Point(rnd.nextInt(x), rnd.nextInt(y));
-            } while (coin.getPos().equals(p) || snek.getBody().contains(p) || snek.getHead().equals(p)
-            || obstacles.contains(p));
-            obstacles.add(p);
+public void newObstacles(Snake snek, Coin coin, int amount) {
+
+    // Do not generate more than 50 obstacles
+    if (obstacles.size() >= 50) {
+        return;
+    }
+
+    Random rnd = new Random();
+
+    // Store all available positions
+    ArrayList<Point> availablePositions = new ArrayList<>();
+
+    // Check every valid grid position
+    for (int i = 0; i < x; i++) {
+        for (int j = 0; j < y; j++) {
+
+            Point p = new Point(i, j);
+
+            // Check whether the position is occupied
+            if (!p.equals(coin.getPos())
+                    && !snek.getBody().contains(p)
+                    && !snek.getHead().equals(p)
+                    && !obstacles.contains(p)) {
+
+                availablePositions.add(p);
+            }
         }
     }
 
+    // Generate obstacles only when positions are available
+    int remainingCapacity = 50 - obstacles.size();
+
+    int actualAmount = Math.min(
+            amount,
+            Math.min(availablePositions.size(), remainingCapacity)
+    );
+
+    for (int i = 0; i < actualAmount; i++) {
+
+        // Select a random available position
+        int index = rnd.nextInt(availablePositions.size());
+
+        Point selectedPosition = availablePositions.remove(index);
+
+        obstacles.add(selectedPosition);
+    }
+}
+
+    
     public Color getColor() {
         return color;
     }
