@@ -123,15 +123,23 @@ public class GameController {
     }
 
     private boolean valKey(KeyCode key) {
-        if (!key.isArrowKey()) return false;
-        else {
-            if (key.equals(KeyCode.LEFT)) if (!this.key.equals(KeyCode.RIGHT)) return true;
-            if (key.equals(KeyCode.RIGHT)) if (!this.key.equals(KeyCode.LEFT)) return true;
-            if (key.equals(KeyCode.DOWN)) if (!this.key.equals(KeyCode.DOWN)) return true;
-            if (key.equals(KeyCode.UP)) return !this.key.equals(KeyCode.DOWN);
-            return false;
-        }
+    if (!key.isArrowKey()) {
+        return false;
     }
+    if (key == KeyCode.LEFT) {
+        return this.key != KeyCode.RIGHT;
+    }
+    if (key == KeyCode.RIGHT) {
+        return this.key != KeyCode.LEFT;
+    }
+    if (key == KeyCode.UP) {
+        return this.key != KeyCode.DOWN;
+    }
+    if (key == KeyCode.DOWN) {
+        return this.key != KeyCode.UP;
+    }
+    return false;
+}
 
     private void reset() {
 
