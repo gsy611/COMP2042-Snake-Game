@@ -143,26 +143,29 @@ public class GameController {
 
     private void reset() {
 
-        animation.jumpTo(Duration.ZERO);
-        animation.stop();
+    animation.jumpTo(Duration.ZERO);
+    animation.stop();
 
-        snek = new Snake(game.getWidth(), game.getHeight(), game.isNoBorder(), obstacle);
-        coin = new Coin(game.getWidth(), game.getHeight(), snek, obstacle);
+    // Clear obstacles from the previous game first.
+    obstacle.reset();
 
-        int unusedObstacleCount = new Random().nextInt(game.getWidth() * game.getHeight() / 20) + 3;
+    // Create new game objects.
+    snek = new Snake(game.getWidth(), game.getHeight(), game.isNoBorder(), obstacle);
+    coin = new Coin(game.getWidth(), game.getHeight(), snek, obstacle);
 
-        animation.setRate(game.getSpeed());
-        key = KeyCode.LEFT;
-        keyPressed = false;
-        game.resetScore();
-        obstacle.reset();
+    int unusedObstacleCount = new Random().nextInt(game.getWidth() * game.getHeight() / 20) + 3;
 
-        gameView.gameWon();
-        gameView.gameOver(snek);
-        gameView.updateScoreLabel();
+    animation.setRate(game.getSpeed());
+    key = KeyCode.LEFT;
+    keyPressed = false;
+    game.resetScore();
 
-        gameView.drawGrid(coin, snek, obstacle, gameView.gc, false, 0);
-    }
+    gameView.gameWon();
+    gameView.gameOver(snek);
+    gameView.updateScoreLabel();
+
+    gameView.drawGrid(coin, snek, obstacle, gameView.gc, false, 0);
+}
 
     private void powerCoin() {
         animation.setRate(game.getSpeed());
