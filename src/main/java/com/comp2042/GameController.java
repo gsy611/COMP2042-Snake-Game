@@ -35,23 +35,21 @@ public class GameController {
         animation.setRate(game.getSpeed());
     }
 
-    private final Timeline animation = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+    private final Timeline animation = new Timeline(
+        new KeyFrame(Duration.seconds(1), event -> updateGame())
+);
+
+private void updateGame() {
+    // Stop the game if the snake is already dead.
     if (snek.getDead()) {
         stopAnimation();
         gameView.gameOver(snek);
         return;
     }
 
-    if (key.equals(KeyCode.LEFT)) {
-        snek.move('L');
-    } else if (key.equals(KeyCode.RIGHT)) {
-        snek.move('R');
-    } else if (key.equals(KeyCode.UP)) {
-        snek.move('U');
-    } else if (key.equals(KeyCode.DOWN)) {
-        snek.move('D');
-    }
+    moveSnake();
 
+    // Check whether the snake has eaten the coin.
     if (!snek.getDead() && snek.ateCoin(coin)) {
         powerCoin();
         game.incScore();
@@ -69,40 +67,62 @@ public class GameController {
         stopAnimation();
     }
 
-    gameView.drawGrid(coin, snek, obstacle, gameView.gc, false, 0);
+    updateGameView();
+}
 
+private void moveSnake() {
+    if (key == KeyCode.LEFT) {
+        snek.move('L');
+    } else if (key == KeyCode.RIGHT) {
+        snek.move('R');
+    } else if (key == KeyCode.UP) {
+        snek.move('U');
+    } else if (key == KeyCode.DOWN) {
+        snek.move('D');
+    }
+}
+
+private void updateGameView() {
+    gameView.drawGrid(coin, snek, obstacle, gameView.gc, false, 0);
     gameView.gameWon();
     gameView.gameOver(snek);
     gameView.updateScoreLabel();
-}));
+}
     private void stopAnimation() {
     animation.stop();
 }
     
 public void handle(KeyEvent event) {
     KeyCode code = event.getCode();
-
-    handleDirectionKey(code);
-
-    if (code == KeyCode.P) {
-        pauseGame();
+    if (code.isArrowKey()) {
+        handleDirectionKey(code);
+        return;
     }
 
-    if (code == KeyCode.TAB) {
-        reset();
-        gameView.scoreLabel.setText("Score: " + game.getScorePoints());
-    }
+    switch (code) {
+        case P:
+            pauseGame();
+            break;
 
-    if (code == KeyCode.PLUS) {
-        changeScreenSize(true);
-    }
+        case TAB:
+            reset();
+            break;
 
-    if (code == KeyCode.MINUS) {
-        changeScreenSize(false);
-    }
+        case EQUALS:
+        case PLUS:
+            changeScreenSize(true);
+            break;
 
-    if (code == KeyCode.ESCAPE) {
-        returnToMainMenu();
+        case MINUS:
+            changeScreenSize(false);
+            break;
+
+        case ESCAPE:
+            returnToMainMenu();
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -143,15 +163,24 @@ private void pauseGame() {
 private void changeScreenSize(boolean fullscreen) {
     gameView.scaleToFullscreen(fullscreen, stage, obstacle, snek, coin);
 
-    if (fullscreen) {
-        gameView.gameOverLabel.setStyle("-fx-font-size: 50;");
-        gameView.gameWonLabel.setStyle("-fx-font-size: 50;");
-        gameView.scoreLabel.setStyle("-fx-font-size: 35;");
-    } else {
-        gameView.gameOverLabel.setStyle("-fx-font-size: 15;");
-        gameView.gameWonLabel.setStyle("-fx-font-size: 15;");
-        gameView.scoreLabel.setStyle("-fx-font-size: 15;");
-    }
+    updateFontSize(fullscreen);
+}
+
+private void updateFontSize(boolean fullscreen) {
+    int messageFontSize = fullscreen ? 50 : 15;
+    int scoreFontSize = fullscreen ? 35 : 15;
+
+    gameView.gameOverLabel.setStyle(
+            "-fx-font-size: " + messageFontSize + ";"
+    );
+
+    gameView.gameWonLabel.setStyle(
+            "-fx-font-size: " + messageFontSize + ";"
+    );
+
+    gameView.scoreLabel.setStyle(
+            "-fx-font-size: " + scoreFontSize + ";"
+    );
 }
 
 private void returnToMainMenu() {
