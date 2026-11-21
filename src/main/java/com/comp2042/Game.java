@@ -90,4 +90,7 @@ public class Game {
     public boolean isNoBorder() {
         return noBorder;
     }
+    public void finishGame() {
+        maxScore = score;
+}
 }

@@ -3,22 +3,54 @@ package com.comp2042;
 import javafx.scene.image.Image;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Coin {
     private Point pos;
     private Image image = new Image("resources/views/res/redcoin.png");
+    public static boolean hasAvailablePosition(
+        int x, int y, Snake snek, Obstacle obstacle) {
 
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                Point candidate = new Point(i, j);
+
+                if (!snek.getHead().equals(candidate)
+                        && !snek.getBody().contains(candidate)
+                        && !obstacle.getObstacles().contains(candidate)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
     public Coin(int x, int y, Snake snek, Obstacle obstacle) {
-        int tx;
-        int ty;
-        do {
-            Random rnd = new Random();
+        if (x <= 0 || y <= 0) {
+            throw new IllegalArgumentException("Grid dimensions must be positive.");
+        }
 
-            tx = rnd.nextInt(x);
-            ty = rnd.nextInt(y);
-            pos = new Point(tx, ty);
-        } while (snek.getHead().equals(pos) || snek.getBody().contains(pos) || obstacle.getObstacles().contains(pos));
+        ArrayList<Point> availablePositions = new ArrayList<>();
+
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                Point candidate = new Point(i, j);
+
+                if (!snek.getHead().equals(candidate)
+                        && !snek.getBody().contains(candidate)
+                        && !obstacle.getObstacles().contains(candidate)) {
+                    availablePositions.add(candidate);
+                }
+            }
+        }
+
+        if (availablePositions.isEmpty()) {
+            throw new IllegalStateException("No available position for a coin.");
+        }
+
+        Random rnd = new Random();
+        pos = availablePositions.get(rnd.nextInt(availablePositions.size()));
     }
 
     public Point getPos() {
@@ -26,8 +58,7 @@ public class Coin {
     }
 
     public int getPoints() {
-        int points = 5;
-        return points;
+        return 5;
     }
 
     public Image getImage() {

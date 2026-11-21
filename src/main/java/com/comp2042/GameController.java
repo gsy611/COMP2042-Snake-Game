@@ -244,6 +244,15 @@ private void handleBlueCoin() {
 }
 
 private void newCoin() {
+
+    if (!Coin.hasAvailablePosition(
+            game.getWidth(), game.getHeight(), snek, obstacle)) {
+
+        game.finishGame();
+        stopAnimation();
+        return;
+    }
+
     coin = createCoin();
 }
 
