@@ -17,8 +17,8 @@ public class GameController {
     private Stage stage;
     private Obstacle obstacle;
 
-    public static KeyCode key = KeyCode.LEFT;
-    public static KeyCode lastKey = KeyCode.LEFT;
+    private KeyCode key = KeyCode.LEFT;
+    private KeyCode lastKey = KeyCode.LEFT;
     private boolean keyPressed = false;
 
 
@@ -109,7 +109,8 @@ private void handleDirectionKey(KeyCode code) {
         lastKey = key;
         key = code;
         keyPressed = true;
-        gameView.turnDir(snek);
+
+        gameView.turnDir(snek, lastKey, key);
     }
 }
 
@@ -170,6 +171,7 @@ private void returnToMainMenu() {
     coin = new Coin(game.getWidth(), game.getHeight(), snek, obstacle);
     animation.setRate(game.getSpeed());
     key = KeyCode.LEFT;
+    lastKey = KeyCode.LEFT;
     keyPressed = false;
     game.resetScore();
 
@@ -218,23 +220,43 @@ private void handleBlueCoin() {
     snek.ignoreBorders(true);
 }
 
-    private void newCoin() {
-        if (game.isPowerUp()) {
-            Random rnd = new Random();
-            int ran = rnd.nextInt(12);
-            if (ran == 1) {
-                coin = new GoldCoin(game.getWidth(), game.getHeight(), snek, obstacle);
-            } else if (ran == 2) {
-                coin = new RainbowCoin(game.getWidth(), game.getHeight(), snek, obstacle);
-            } else if (ran == 3) {
-                coin = new BlueCoin(game.getWidth(), game.getHeight(), snek, obstacle);
-            } else if (ran == 4 && obstacle.getObstacles().size() == 0) {
-                coin = new SilverCoin(game.getWidth(), game.getHeight(), snek, obstacle);
-            } else {
-                coin = new Coin(game.getWidth(), game.getHeight(), snek, obstacle);
-            }
-        } else {
-            coin = new Coin(game.getWidth(), game.getHeight(), snek, obstacle);
-        }
+private void newCoin() {
+    coin = createCoin();
+}
+
+private Coin createCoin() {
+
+    // Power-ups are disabled: create a normal coin
+    if (!game.isPowerUp()) {
+        return createNormalCoin();
     }
+
+    Random rnd = new Random();
+    int ran = rnd.nextInt(12);
+
+    return switch (ran) {
+        case 1 -> new GoldCoin(
+                game.getWidth(), game.getHeight(), snek, obstacle);
+
+        case 2 -> new RainbowCoin(
+                game.getWidth(), game.getHeight(), snek, obstacle);
+
+        case 3 -> new BlueCoin(
+                game.getWidth(), game.getHeight(), snek, obstacle);
+
+        case 4 -> obstacle.getObstacles().isEmpty()
+                ? new SilverCoin(game.getWidth(), game.getHeight(), snek, obstacle)
+                : createNormalCoin();
+
+        default -> createNormalCoin();
+    };
+}
+
+private Coin createNormalCoin() {
+    return new Coin(game.getWidth(), game.getHeight(), snek, obstacle);
+}
+
+    
+
+
 }

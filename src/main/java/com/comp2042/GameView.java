@@ -173,17 +173,35 @@ public class GameView {
         gc.drawImage(rotatedImage, (point.x * game.getMultiplier()) * fullScale, (point.y * game.getMultiplier()) * fullScale, game.getMultiplier() * fullScale * fullScale, game.getMultiplier() * fullScale * fullScale);
     }
 
-    public void turnDir(Snake snek) {
-        if ((GameController.lastKey == KeyCode.LEFT && GameController.key == KeyCode.UP) || (GameController.lastKey == KeyCode.DOWN && GameController.key == KeyCode.RIGHT)) {
-            turnArray[(int) snek.getHead().getX()][(int) snek.getHead().getY()] = 2;
-        } else if ((GameController.lastKey == KeyCode.LEFT && GameController.key == KeyCode.DOWN) || (GameController.lastKey == KeyCode.UP && GameController.key == KeyCode.RIGHT)) {
-            turnArray[(int) snek.getHead().getX()][(int) snek.getHead().getY()] = 3;
-        } else if ((GameController.lastKey == KeyCode.RIGHT && GameController.key == KeyCode.UP) || (GameController.lastKey == KeyCode.DOWN && GameController.key == KeyCode.LEFT)) {
-            turnArray[(int) snek.getHead().getX()][(int) snek.getHead().getY()] = 1;
-        } else if ((GameController.lastKey == KeyCode.UP && GameController.key == KeyCode.LEFT) || (GameController.lastKey == KeyCode.RIGHT && GameController.key == KeyCode.DOWN)) {
-            turnArray[(int) snek.getHead().getX()][(int) snek.getHead().getY()] = 4;
-        } else turnArray[(int) snek.getHead().getX()][(int) snek.getHead().getY()] = 0;
+    public void turnDir(Snake snek, KeyCode previousDirection, KeyCode currentDirection) {
+
+    int x = (int) snek.getHead().getX();
+    int y = (int) snek.getHead().getY();
+
+    if ((previousDirection == KeyCode.LEFT && currentDirection == KeyCode.UP)
+            || (previousDirection == KeyCode.DOWN && currentDirection == KeyCode.RIGHT)) {
+
+        turnArray[x][y] = 2;
+
+    } else if ((previousDirection == KeyCode.LEFT && currentDirection == KeyCode.DOWN)
+            || (previousDirection == KeyCode.UP && currentDirection == KeyCode.RIGHT)) {
+
+        turnArray[x][y] = 3;
+
+    } else if ((previousDirection == KeyCode.RIGHT && currentDirection == KeyCode.UP)
+            || (previousDirection == KeyCode.DOWN && currentDirection == KeyCode.LEFT)) {
+
+        turnArray[x][y] = 1;
+
+    } else if ((previousDirection == KeyCode.UP && currentDirection == KeyCode.LEFT)
+            || (previousDirection == KeyCode.RIGHT && currentDirection == KeyCode.DOWN)) {
+
+        turnArray[x][y] = 4;
+
+    } else {
+        turnArray[x][y] = 0;
     }
+}
 
     public void gameOver(Snake snek) {
         if (snek.getDead() && !gameOverVis) {
