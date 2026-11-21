@@ -17,11 +17,11 @@ public class Obstacle {
        this.y = y;
     }
 
-public void newObstacles(Snake snek, Coin coin, int amount) {
+public int newObstacles(Snake snek, Coin coin, int amount) {
 
     // Do not generate more than 50 obstacles
     if (obstacles.size() >= 50) {
-        return;
+        return 0;
     }
 
     Random rnd = new Random();
@@ -63,6 +63,7 @@ public void newObstacles(Snake snek, Coin coin, int amount) {
 
         obstacles.add(selectedPosition);
     }
+    return actualAmount;
 }
 
     

@@ -45,8 +45,8 @@ public class Game {
         score++;
     }
 
-    public void decMaxScore(int num) {
-        this.maxScore -= (num - 1);
+    public void decMaxScore(int amount) {
+        this.maxScore -= amount;
     }
 
     public int getWidth() {
