@@ -18,7 +18,6 @@
         <!-- Main class (package "resources" matches the original project layout) -->
         <mainClass>com.comp2042.Main</mainClass>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -45,6 +44,13 @@
             <artifactId>javafx-base</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <!-- JUnit 5 for unit testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.11.4</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -58,7 +64,11 @@
                     <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
-
+             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+            </plugin>
             <!-- Lets you run the app with: mvn javafx:run -->
             <plugin>
                 <groupId>org.openjfx</groupId>
