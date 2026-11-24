@@ -1,11 +1,11 @@
 package com.comp2042;
-
+import java.io.IOException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
+import javafx.scene.layout.VBox;
 public class MainMenuController {
 
     private static final int X_VALUE = 20;
@@ -29,6 +29,13 @@ public class MainMenuController {
 
     private void launchSnake(Stage gameStage) {
         Game game = new Game(X_VALUE, Y_VALUE, POWER_UP, DIFFICULTY);
+        HighScoreManager highScoreManager = new HighScoreManager();
+        int highScore = 0;
+        try {
+            highScore = highScoreManager.loadHighScore();
+        } catch (IOException e) {
+            System.err.println("Failed to load high score: " + e.getMessage());
+        }
         Obstacle obstacle = new Obstacle(game.getWidth(), game.getHeight());
         Snake snek = new Snake(game.getWidth(), game.getHeight(), game.isNoBorder(), obstacle);
         Coin coin = new Coin(game.getWidth(), game.getHeight(), snek, obstacle);
@@ -42,11 +49,24 @@ public class MainMenuController {
         gameScene.setOnKeyPressed(controller::handle);
 
         gameView.makeScene(gameScene, snek, coin);
-        gamePane.getChildren().addAll(gameView.gridCanvas, gameView.gameOverLabel, gameView.gameWonLabel, gameView.scoreLabel);
-        gamePane.setPadding(new Insets(20));
-        gamePane.setAlignment(gameView.gameOverLabel, Pos.TOP_CENTER);
-        gamePane.setAlignment(gameView.gameWonLabel, Pos.TOP_CENTER);
-        gamePane.setAlignment(gameView.scoreLabel, Pos.BOTTOM_CENTER);
+        gameView.updateHighScoreLabel(highScore);
+        VBox scoreBox = new VBox(8);
+scoreBox.getChildren().addAll(
+        gameView.highScoreLabel,
+        gameView.scoreLabel
+);
+
+gamePane.getChildren().addAll(
+        gameView.gridCanvas,
+        gameView.gameOverLabel,
+        gameView.gameWonLabel,
+        scoreBox
+);
+
+gamePane.setPadding(new Insets(20));
+gamePane.setAlignment(gameView.gameOverLabel, Pos.CENTER);
+gamePane.setAlignment(gameView.gameWonLabel, Pos.TOP_CENTER);
+gamePane.setAlignment(scoreBox, Pos.TOP_RIGHT);
     }
 
     public ViewManager getViewManager() {
