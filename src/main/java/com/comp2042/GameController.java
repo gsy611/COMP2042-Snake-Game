@@ -1,5 +1,5 @@
 package com.comp2042;
-
+import java.io.IOException;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -16,7 +16,7 @@ public class GameController {
     private Game game;
     private Stage stage;
     private Obstacle obstacle;
-
+    private final HighScoreManager highScoreManager;
     private KeyCode key = KeyCode.LEFT;
     private KeyCode lastKey = KeyCode.LEFT;
     private boolean keyPressed = false;
@@ -31,6 +31,7 @@ public class GameController {
         this.stage = stage;
 
         this.obstacle = obstacle;
+        this.highScoreManager = new HighScoreManager();
         animation.setCycleCount(Animation.INDEFINITE);
         animation.setRate(game.getSpeed());
     }
@@ -227,8 +228,22 @@ private void powerCoin() {
     animation.setRate(game.getSpeed() + speedBonus);
 
     game.addPoints(coin.getPoints());
+    updateHighScore();
 }
+private void updateHighScore() {
+    try {
+        int currentScore = game.getScorePoints();
 
+        if (highScoreManager.updateHighScore(currentScore)) {
+            gameView.updateHighScoreLabel(currentScore);
+        }
+
+    } catch (IOException e) {
+        System.err.println(
+                "Failed to save high score: " + e.getMessage()
+        );
+    }
+}
 
 
 private void newCoin() {

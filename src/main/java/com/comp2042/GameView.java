@@ -22,6 +22,7 @@ public class GameView {
     public Label gameOverLabel;
     public Label gameWonLabel;
     public Label scoreLabel;
+    public Label highScoreLabel;
     private boolean gameOverVis = false;
     private boolean gameWonVis = false;
 
@@ -58,8 +59,13 @@ public class GameView {
         scoreLabel = new Label("Score: " + game.getScorePoints());
         scoreLabel.setId("scoreLabel");
         scoreLabel.getStylesheets().add(css);
-        scoreLabel.setFont(new Font("Arial", 20));
+        scoreLabel.setFont(new Font("Arial", 15));
         scoreLabel.setVisible(true);
+        highScoreLabel = new Label("High Score: 0");
+        highScoreLabel.setId("highScoreLabel");
+        highScoreLabel.getStylesheets().add(css);
+        highScoreLabel.setFont(new Font("Arial", 20));
+        highScoreLabel.setVisible(true);
     }
 
     public void scaleToFullscreen(boolean fullScreen, Stage primaryStage, Obstacle obstacle, Snake snek, Coin coin) {
@@ -252,6 +258,9 @@ private void drawGridInternal(
     public void updateScoreLabel() {
         scoreLabel.setText("Score: " + game.getScorePoints());
     }
+    public void updateHighScoreLabel(int highScore) {
+        highScoreLabel.setText("High Score: " + highScore);
+    }
     public void updateFontSize(boolean fullscreen) {
     int messageFontSize = fullscreen ? 50 : 15;
     int scoreFontSize = fullscreen ? 35 : 15;
@@ -267,5 +276,8 @@ private void drawGridInternal(
     scoreLabel.setStyle(
             "-fx-font-size: " + scoreFontSize + ";"
     );
+    highScoreLabel.setStyle(
+            "-fx-font-size: " + scoreFontSize + ";"
+);
 }
 }
