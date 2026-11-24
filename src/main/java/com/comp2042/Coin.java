@@ -60,7 +60,9 @@ public class Coin {
     public int getPoints() {
         return 5;
     }
-
+    public double applyEffect(Game game, Snake snek, Obstacle obstacle) {
+        return 0;
+    }
     public Image getImage() {
         return image;
     }

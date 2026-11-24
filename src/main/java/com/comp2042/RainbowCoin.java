@@ -18,7 +18,10 @@ public class RainbowCoin extends Coin {
         double speedBonus = 5;
         return speedBonus;
     }
-
+    @Override
+    public double applyEffect(Game game, Snake snek, Obstacle obstacle) {
+        return getSpeedBonus();
+    }
     public Image getImage() {
         return image;
     }

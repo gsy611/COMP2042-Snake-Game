@@ -17,4 +17,9 @@ public class BlueCoin extends Coin {
     public Image getImage() {
         return image;
     }
+    @Override
+    public double applyEffect(Game game, Snake snek, Obstacle obstacle) {
+        snek.ignoreBorders(true);
+        return 0;
+}
 }

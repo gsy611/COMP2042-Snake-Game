@@ -1,5 +1,5 @@
 package com.comp2042;
-
+import java.util.Random;
 import javafx.scene.image.Image;
 
 public class SilverCoin extends Coin {
@@ -16,5 +16,19 @@ public class SilverCoin extends Coin {
     public int getPoints() {
         int points = 5;
         return points;
+    }
+    @Override
+    public double applyEffect(Game game, Snake snek, Obstacle obstacle) {
+        Random rnd = new Random();
+
+        int obstacleCount =
+            rnd.nextInt(game.getWidth() * game.getHeight() / 20) + 3;
+
+        int addedObstacles =
+            obstacle.newObstacles(snek, this, obstacleCount);
+
+        game.decMaxScore(addedObstacles);
+
+        return 0;
     }
 }

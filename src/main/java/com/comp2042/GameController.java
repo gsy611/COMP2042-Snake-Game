@@ -236,41 +236,16 @@ private void returnToMainMenu() {
 
     
 private void powerCoin() {
-    animation.setRate(game.getSpeed());
     snek.ignoreBorders(false);
 
-    if (coin instanceof RainbowCoin) {
-        handleRainbowCoin((RainbowCoin) coin);
+    double speedBonus = coin.applyEffect(game, snek, obstacle);
 
-    } else if (coin instanceof SilverCoin) {
-        handleSilverCoin();
-
-    } else if (coin instanceof BlueCoin) {
-        handleBlueCoin();
-    }
+    animation.setRate(game.getSpeed() + speedBonus);
 
     game.addPoints(coin.getPoints());
 }
 
-private void handleRainbowCoin(RainbowCoin rainbowCoin) {
-    animation.setRate(game.getSpeed() + rainbowCoin.getSpeedBonus());
-}
 
-private void handleSilverCoin() {
-    Random rnd = new Random();
-
-    int obstacleCount =
-        rnd.nextInt(game.getWidth() * game.getHeight() / 20) + 3;
-
-    int addedObstacles =
-        obstacle.newObstacles(snek, coin, obstacleCount);
-
-    game.decMaxScore(addedObstacles);
-}
-
-private void handleBlueCoin() {
-    snek.ignoreBorders(true);
-}
 
 private void newCoin() {
 
