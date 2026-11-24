@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Coin {
     private Point pos;
-    private Image image = new Image("resources/views/res/redcoin.png");
+    private final Image image;
     public static boolean hasAvailablePosition(
         int x, int y, Snake snek, Obstacle obstacle) {
 
@@ -26,32 +26,40 @@ public class Coin {
 
         return false;
     }
-    public Coin(int x, int y, Snake snek, Obstacle obstacle) {
-        if (x <= 0 || y <= 0) {
-            throw new IllegalArgumentException("Grid dimensions must be positive.");
-        }
+   public Coin(int x, int y, Snake snek, Obstacle obstacle) {
+    this(x, y, snek, obstacle, "resources/views/res/redcoin.png");
+}
 
-        ArrayList<Point> availablePositions = new ArrayList<>();
+protected Coin(
+        int x, int y, Snake snek, Obstacle obstacle, String imagePath) {
 
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                Point candidate = new Point(i, j);
+    if (x <= 0 || y <= 0) {
+        throw new IllegalArgumentException("Grid dimensions must be positive.");
+    }
 
-                if (!snek.getHead().equals(candidate)
-                        && !snek.getBody().contains(candidate)
-                        && !obstacle.getObstacles().contains(candidate)) {
-                    availablePositions.add(candidate);
-                }
+    this.image = new Image(imagePath);
+
+    ArrayList<Point> availablePositions = new ArrayList<>();
+
+    for (int i = 0; i < x; i++) {
+        for (int j = 0; j < y; j++) {
+            Point candidate = new Point(i, j);
+
+            if (!snek.getHead().equals(candidate)
+                    && !snek.getBody().contains(candidate)
+                    && !obstacle.getObstacles().contains(candidate)) {
+                availablePositions.add(candidate);
             }
         }
-
-        if (availablePositions.isEmpty()) {
-            throw new IllegalStateException("No available position for a coin.");
-        }
-
-        Random rnd = new Random();
-        pos = availablePositions.get(rnd.nextInt(availablePositions.size()));
     }
+
+    if (availablePositions.isEmpty()) {
+        throw new IllegalStateException("No available position for a coin.");
+    }
+
+    Random rnd = new Random();
+    pos = availablePositions.get(rnd.nextInt(availablePositions.size()));
+}
 
     public Point getPos() {
         return new Point(pos);
