@@ -43,7 +43,7 @@ public class Snake {
             case 'U':
                 snakeDir = 0;
                 head.translate(0, -1);
-                if (borderControl() && (!ignoreBorders && !noBorder) || obstacle.getObstacles().contains(head)) {
+                if (borderControl() && (!ignoreBorders && !noBorder) || obstacle.contains(head) ) {
                     head.translate(0, 1);
                     dead = true;
                 } else if (borderControl() && (ignoreBorders || noBorder)) {
@@ -54,7 +54,7 @@ public class Snake {
             case 'D':
                 snakeDir = 180;
                 head.translate(0, 1);
-                if (borderControl() && (!ignoreBorders && !noBorder) || obstacle.getObstacles().contains(head)) {
+                if (borderControl() && (!ignoreBorders && !noBorder) || obstacle.contains(head)) {
                     head.translate(0, -1);
                     dead = true;
                 } else if (borderControl() && (ignoreBorders || noBorder)) {
@@ -65,7 +65,7 @@ public class Snake {
             case 'L':
                 snakeDir = 270;
                 head.translate(-1, 0);
-                if (borderControl() && (!ignoreBorders && !noBorder) || obstacle.getObstacles().contains(head)) {
+                if (borderControl() && (!ignoreBorders && !noBorder) || obstacle.contains(head)) {
                     head.translate(1, 0);
                     dead = true;
                 } else if (borderControl() && (ignoreBorders || noBorder)) {
@@ -76,7 +76,7 @@ public class Snake {
             case 'R':
                 snakeDir = 90;
                 head.translate(1, 0);
-                if (borderControl() && (!ignoreBorders && !noBorder) || obstacle.getObstacles().contains(head)) {
+                if (borderControl() && (!ignoreBorders && !noBorder) || obstacle.contains(head)) {
                     head.translate(-1, 0);
                     dead = true;
                 } else if (borderControl() && (ignoreBorders || noBorder)) {
@@ -116,7 +116,11 @@ public class Snake {
     }
 
     public ArrayList<Point> getBody() {
-        return new ArrayList<>(body);
+        ArrayList<Point> copy = new ArrayList<>();
+        for (Point point : body) {
+            copy.add(new Point(point));
+    }
+    return copy;
     }
 
     public Point getHead() {

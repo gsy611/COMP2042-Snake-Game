@@ -72,10 +72,23 @@ public int newObstacles(Snake snek, Coin coin, int amount) {
     }
 
     public ArrayList<Point> getObstacles() {
-        return obstacles;
+        ArrayList<Point> copy = new ArrayList<>();
+
+        for (Point point : obstacles) {
+            copy.add(new Point(point));
+        }
+
+        return copy;
     }
 
     public void reset() {
         obstacles.clear();
+    }
+    public boolean contains(Point point) {
+        return obstacles.contains(point);
+    }
+
+    public boolean isEmpty() {
+        return obstacles.isEmpty();
     }
 }

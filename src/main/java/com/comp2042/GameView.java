@@ -86,43 +86,63 @@ public class GameView {
 
         gameOverLabel.setFont(new Font("Arial", 25 * fullScale));
         gameWonLabel.setFont(new Font("Arial", 25 * fullScale));
-        drawGrid(coin, snek, obstacle, gc, false, 0);
+        drawGrid(coin, snek, obstacle, gc);
     }
 
-    public void drawGrid(Coin coin, Snake snek, Obstacle obstacle, GraphicsContext gc, boolean a, int b) {
-        gc.setFill(game.getColor());
-        gc.fillRect(0, 0, gridCanvas.getWidth(), gridCanvas.getHeight());
+public void drawGrid(
+        Coin coin,
+        Snake snek,
+        Obstacle obstacle,
+        GraphicsContext gc) {
 
-        gc.drawImage(coin.getImage(), (coin.getPos().x * game.getMultiplier()) * fullScale, (coin.getPos().y * game.getMultiplier()) * fullScale, game.getMultiplier() * fullScale - 3 * fullScale, game.getMultiplier() * fullScale - 3 * fullScale);
+    drawGridInternal(coin, snek, obstacle, gc);
+}
 
-        int bodyIndex = 0;
-        for (Point point : snek.getBody()) {
-            drawBody(snek, point, bodyIndex);
-            bodyIndex++;
-        }
+private void drawGrid(Coin coin, Snake snek, GraphicsContext gc) {
+    drawGridInternal(coin, snek, null, gc);
+}
 
-        drawHead(snek);
+private void drawGridInternal(
+        Coin coin,
+        Snake snek,
+        Obstacle obstacle,
+        GraphicsContext gc) {
 
+    // Draw background.
+    gc.setFill(game.getColor());
+    gc.fillRect(0, 0, gridCanvas.getWidth(), gridCanvas.getHeight());
+
+    // Draw coin.
+    gc.drawImage(
+            coin.getImage(),
+            coin.getPos().x * game.getMultiplier() * fullScale,
+            coin.getPos().y * game.getMultiplier() * fullScale,
+            game.getMultiplier() * fullScale - 3 * fullScale,
+            game.getMultiplier() * fullScale - 3 * fullScale
+    );
+
+    // Draw snake body.
+    for (int i = 0; i < snek.getBody().size(); i++) {
+    drawBody(snek, snek.getBody().get(i), i);
+}
+
+    // Draw snake head.
+    drawHead(snek);
+
+    // Draw obstacles if available.
+    if (obstacle != null) {
         gc.setFill(obstacle.getColor());
+
         for (Point point : obstacle.getObstacles()) {
-            gc.fillRect(point.x * game.getMultiplier() * fullScale, point.y * game.getMultiplier() * fullScale, game.getMultiplier() * fullScale, game.getMultiplier() * fullScale);
+            gc.fillRect(
+                    point.x * game.getMultiplier() * fullScale,
+                    point.y * game.getMultiplier() * fullScale,
+                    game.getMultiplier() * fullScale,
+                    game.getMultiplier() * fullScale
+            );
         }
     }
-
-    private void drawGrid(Coin coin, Snake snek, GraphicsContext gc) {
-        gc.setFill(game.getColor());
-        gc.fillRect(0, 0, gridCanvas.getWidth(), gridCanvas.getHeight());
-
-        gc.drawImage(coin.getImage(), (coin.getPos().x * game.getMultiplier()) * fullScale, (coin.getPos().y * game.getMultiplier()) * fullScale, game.getMultiplier() * fullScale - 3 * fullScale, game.getMultiplier() * fullScale - 3 * fullScale);
-
-        int bodyIndex = 0;
-        for (Point point : snek.getBody()) {
-            drawBody(snek, point, bodyIndex);
-            bodyIndex++;
-        }
-
-        drawHead(snek);
-    }
+}
 
     private void drawHead(Snake snek) {
         snek.getImageViewHead().setRotate(snek.getSnakeDir());
@@ -202,7 +222,13 @@ public class GameView {
         turnArray[x][y] = 0;
     }
 }
-
+    public void resetTurnArray() {
+        for (int i = 0; i < turnArray.length; i++) {
+            for (int j = 0; j < turnArray[i].length; j++) {
+                turnArray[i][j] = 0;
+        }
+    }
+}
     public void gameOver(Snake snek) {
         if (snek.getDead() && !gameOverVis) {
             gameOverVis = true;
@@ -226,5 +252,20 @@ public class GameView {
     public void updateScoreLabel() {
         scoreLabel.setText("Score: " + game.getScorePoints());
     }
+    public void updateFontSize(boolean fullscreen) {
+    int messageFontSize = fullscreen ? 50 : 15;
+    int scoreFontSize = fullscreen ? 35 : 15;
 
+    gameOverLabel.setStyle(
+            "-fx-font-size: " + messageFontSize + ";"
+    );
+
+    gameWonLabel.setStyle(
+            "-fx-font-size: " + messageFontSize + ";"
+    );
+
+    scoreLabel.setStyle(
+            "-fx-font-size: " + scoreFontSize + ";"
+    );
+}
 }

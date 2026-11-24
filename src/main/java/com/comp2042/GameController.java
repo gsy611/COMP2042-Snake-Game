@@ -83,7 +83,7 @@ private void moveSnake() {
 }
 
 private void updateGameView() {
-    gameView.drawGrid(coin, snek, obstacle, gameView.gc, false, 0);
+    gameView.drawGrid(coin, snek, obstacle, gameView.gc);
     gameView.gameWon();
     gameView.gameOver(snek);
     gameView.updateScoreLabel();
@@ -162,26 +162,9 @@ private void pauseGame() {
 
 private void changeScreenSize(boolean fullscreen) {
     gameView.scaleToFullscreen(fullscreen, stage, obstacle, snek, coin);
-
-    updateFontSize(fullscreen);
+    gameView.updateFontSize(fullscreen);
 }
 
-private void updateFontSize(boolean fullscreen) {
-    int messageFontSize = fullscreen ? 50 : 15;
-    int scoreFontSize = fullscreen ? 35 : 15;
-
-    gameView.gameOverLabel.setStyle(
-            "-fx-font-size: " + messageFontSize + ";"
-    );
-
-    gameView.gameWonLabel.setStyle(
-            "-fx-font-size: " + messageFontSize + ";"
-    );
-
-    gameView.scoreLabel.setStyle(
-            "-fx-font-size: " + scoreFontSize + ";"
-    );
-}
 
 private void returnToMainMenu() {
     MainMenuController mainMenuController = new MainMenuController();
@@ -220,6 +203,7 @@ private void returnToMainMenu() {
 
     // Create new game objects.
     snek = new Snake(game.getWidth(), game.getHeight(), game.isNoBorder(), obstacle);
+    gameView.resetTurnArray();
     coin = new Coin(game.getWidth(), game.getHeight(), snek, obstacle);
     animation.setRate(game.getSpeed());
     key = KeyCode.LEFT;
@@ -231,7 +215,7 @@ private void returnToMainMenu() {
     gameView.gameOver(snek);
     gameView.updateScoreLabel();
 
-    gameView.drawGrid(coin, snek, obstacle, gameView.gc, false, 0);
+    gameView.drawGrid(coin, snek, obstacle, gameView.gc);
 }
 
     
@@ -280,7 +264,7 @@ private Coin createCoin() {
         case 3 -> new BlueCoin(
                 game.getWidth(), game.getHeight(), snek, obstacle);
 
-        case 4 -> obstacle.getObstacles().isEmpty()
+        case 4 -> obstacle.isEmpty()
                 ? new SilverCoin(game.getWidth(), game.getHeight(), snek, obstacle)
                 : createNormalCoin();
 

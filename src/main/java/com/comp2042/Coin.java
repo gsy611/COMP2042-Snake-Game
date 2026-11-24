@@ -9,23 +9,27 @@ import java.util.Random;
 public class Coin {
     private Point pos;
     private final Image image;
+    private static boolean isPositionAvailable(Point candidate, Snake snek, Obstacle obstacle) {
+
+        return !snek.getHead().equals(candidate)
+            && !snek.getBody().contains(candidate)
+            && !obstacle.contains(candidate);
+    }
     public static boolean hasAvailablePosition(
         int x, int y, Snake snek, Obstacle obstacle) {
 
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                Point candidate = new Point(i, j);
+    for (int i = 0; i < x; i++) {
+        for (int j = 0; j < y; j++) {
+            Point candidate = new Point(i, j);
 
-                if (!snek.getHead().equals(candidate)
-                        && !snek.getBody().contains(candidate)
-                        && !obstacle.getObstacles().contains(candidate)) {
-                    return true;
-                }
+            if (isPositionAvailable(candidate, snek, obstacle)) {
+                return true;
             }
         }
-
-        return false;
     }
+
+    return false;
+}
    public Coin(int x, int y, Snake snek, Obstacle obstacle) {
     this(x, y, snek, obstacle, "resources/views/res/redcoin.png");
 }
@@ -45,9 +49,7 @@ protected Coin(
         for (int j = 0; j < y; j++) {
             Point candidate = new Point(i, j);
 
-            if (!snek.getHead().equals(candidate)
-                    && !snek.getBody().contains(candidate)
-                    && !obstacle.getObstacles().contains(candidate)) {
+            if (isPositionAvailable(candidate, snek, obstacle)) {
                 availablePositions.add(candidate);
             }
         }
@@ -73,5 +75,5 @@ protected Coin(
     }
     public Image getImage() {
         return image;
-    }
+    }   
 }
